@@ -341,7 +341,13 @@ class SortNumber(QObject):
 
         #locale.setlocale(locale.LC_ALL, "") # alphabetical sort
 
-        featureList = list( self.layer.getFeatures() )
+	if self.dlg.selFeatureCheckBox.isChecked():
+		featureList = list( self.layer.selectedFeatures() )
+		# Message to Log Messages Panel for debugging		
+		#QgsMessageLog.logMessage( "Use selected features only.", "QGISSortAndNumber", 0 )
+	else:
+	        featureList = list( self.layer.getFeatures() )
+		#QgsMessageLog.logMessage( "Use all features.", "QGISSortAndNumber", 0 )
 
         if field3Id != None:
             featureList = sorted(featureList, key=lambda f: f[field3Id], reverse=isInv3)

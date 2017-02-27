@@ -23,6 +23,7 @@
 from PyQt4.QtCore import pyqtSignal, pyqtSlot, QObject, QSettings, QTranslator, QVariant, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon, QMessageBox
 from qgis.core import *
+import qgis.utils
 #import locale
 # Initialize Qt resources from file resources.py
 import resources
@@ -304,12 +305,20 @@ class SortNumber(QObject):
             messageBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel);
             res = messageBox.exec_()
 
+            # Cancel overwrite
             if res == QMessageBox.Cancel:
                 # self.dlg.runButton.setEnabled(True)
                 # self.dlg.closeButton.setEnabled(True)
                 return
+            # Continue and overwrite
             else:
                 attrIdx = self.layer.dataProvider().fields().indexFromName( self.dlg.fieldNameLineEdit.text() )
+                # Reset order values to NULL
+                self.layer.startEditing()
+                for f in list( self.layer.getFeatures() ):
+                    self.layer.changeAttributeValue(f.id(), attrIdx, None)
+                self.layer.commitChanges()
+
 
         else:
             # Add new attribute
@@ -317,6 +326,8 @@ class SortNumber(QObject):
             attrIdx = self.layer.dataProvider().fields().indexFromName( self.dlg.fieldNameLineEdit.text() )
             self.layer.updateFields() # tell the vector layer to fetch changes from the provider
 
+
+        self.dlg.runButton.setEnabled(False)
 
         # Get params
         field1 = self.dlg.attributeComboBox1.itemData( self.dlg.attributeComboBox1.currentIndex() )
@@ -341,13 +352,13 @@ class SortNumber(QObject):
 
         #locale.setlocale(locale.LC_ALL, "") # alphabetical sort
 
-	if self.dlg.selFeatureCheckBox.isChecked():
-		featureList = list( self.layer.selectedFeatures() )
-		# Message to Log Messages Panel for debugging		
-		#QgsMessageLog.logMessage( "Use selected features only.", "QGISSortAndNumber", 0 )
-	else:
-	        featureList = list( self.layer.getFeatures() )
-		#QgsMessageLog.logMessage( "Use all features.", "QGISSortAndNumber", 0 )
+        if self.dlg.selFeatureCheckBox.isChecked():
+            featureList = list( self.layer.selectedFeatures() )
+            # Message to Log Messages Panel for debugging		
+            #QgsMessageLog.logMessage( "Use selected features only.", "QGISSortAndNumber", 0 )
+        else:
+            featureList = list( self.layer.getFeatures() )
+            #QgsMessageLog.logMessage( "Use all features.", "QGISSortAndNumber", 0 )
 
         if field3Id != None:
             featureList = sorted(featureList, key=lambda f: f[field3Id], reverse=isInv3)
@@ -373,6 +384,8 @@ class SortNumber(QObject):
         messageBox.setIcon( QMessageBox.Information )
         messageBox.setStandardButtons(QMessageBox.Ok);
         res = messageBox.exec_()
+
+        self.dlg.runButton.setEnabled(True)
 
 
     def run(self):

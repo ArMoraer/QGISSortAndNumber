@@ -8,7 +8,7 @@
 
 [general]
 name=Sort and Number
-qgisMinimumVersion=3.0
+qgisMinimumVersion=2.0
 description=This plugin sorts and numbers an attribute table.
 version=0.2
 author=Alexandre Delahaye

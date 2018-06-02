@@ -20,17 +20,15 @@
  *                                                                         *
  ***************************************************************************/
 """
-from __future__ import absolute_import
-from qgis.PyQt.QtCore import pyqtSignal, pyqtSlot, QObject, QSettings, QTranslator, QVariant, qVersion, QCoreApplication
-from qgis.PyQt.QtWidgets import QAction, QMessageBox
-from qgis.PyQt.QtGui import QIcon
+from PyQt4.QtCore import pyqtSignal, pyqtSlot, QObject, QSettings, QTranslator, QVariant, qVersion, QCoreApplication
+from PyQt4.QtGui import QAction, QIcon, QMessageBox
 from qgis.core import *
 import qgis.utils
 #import locale
 # Initialize Qt resources from file resources.py
-from . import resources
+import resources
 # Import the code for the dialog
-from .sort_number_dialog import SortNumberDialog
+from sort_number_dialog import SortNumberDialog
 import os.path
 
 
@@ -268,7 +266,7 @@ class SortNumber(QObject):
     def fillAttrComboBox(self, comboBox):
         comboBox.clear() # clear the combobox
         comboBox.addItem( '', None ) 
-        for field in self.layer.fields():
+        for field in self.layer.pendingFields():
             if not field.name() in self.excludeList:
                 comboBox.addItem( field.name(), field )
 
@@ -408,7 +406,7 @@ class SortNumber(QObject):
         # list layers for input combobox
         self.dlg.layerComboBox.clear() # clear the combobox
         self.dlg.layerComboBox.addItem( '', None ) 
-        layers = list(QgsProject.instance().mapLayers().values()) # Create list with all layers
+        layers = QgsMapLayerRegistry.instance().mapLayers().values() # Create list with all layers
         for layer in layers:
             if layer.type() == QgsMapLayer.VectorLayer: # check if layer is vector
                 self.dlg.layerComboBox.addItem( layer.name(), layer ) 

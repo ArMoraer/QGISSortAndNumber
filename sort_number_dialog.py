@@ -23,7 +23,7 @@
 
 import os
 
-from qgis.PyQt import QtGui, uic
+from PyQt4 import QtGui, uic
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'sort_number_dialog_base.ui'))

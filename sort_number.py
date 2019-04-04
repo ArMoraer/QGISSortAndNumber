@@ -20,7 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 """
-from __future__ import absolute_import
+#from __future__ import absolute_import
 from qgis.PyQt.QtCore import pyqtSignal, pyqtSlot, QObject, QSettings, QTranslator, QVariant, qVersion, QCoreApplication
 from qgis.PyQt.QtWidgets import QAction, QMessageBox
 from qgis.PyQt.QtGui import QIcon
@@ -29,6 +29,7 @@ import qgis.utils
 #import locale
 # Initialize Qt resources from file resources.py
 from . import resources
+#import resources
 # Import the code for the dialog
 from .sort_number_dialog import SortNumberDialog
 import os.path

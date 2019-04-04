@@ -18,3 +18,6 @@ Changelog
 v0.2:
 - added "sort only selected features" option (thanks to [m4x300](https://github.com/m4x300))
 - added i18n support (French translation)
+
+v1.0:
+- compatibilty with QGIS 3.x (not compatible anymore with QGIS 2.x)
